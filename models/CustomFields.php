@@ -1,16 +1,15 @@
 <?php
-class User
+class CustomFields
 {
     // DB Related
     private $conn;
-    private $table = "users";
+    private $table = "customfields";
 
     // User Properties
     public $id;
-    public $email;
-    public $startdate;
-    public $enddate;
-    public $status;
+    public $fieldname;
+    public $user;
+    public $timestamp;
 
     // Construct with Database
     public function __construct($db)
@@ -18,7 +17,7 @@ class User
         $this->conn = $db;
     }
 
-    // Get All Users
+    // Get All customfields
     public function read()
     {
         $query = "SELECT
@@ -34,7 +33,7 @@ class User
         return $stmt;
     }
 
-    // Get a Single Post
+    // Get a Single Custom Field
     public function single()
     {
         $query = "SELECT
@@ -49,48 +48,40 @@ class User
         $stmt->bindParam(1, $this->id);
 
         if ($stmt->execute()) {
-            // Get the post
+            // Get the Custom Field
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
-           if($user){
-                $this->email = $user["email"];
-                $this->startdate = $user["startdate"];
-                $this->enddate = $user["enddate"];
-                $this->status = $user["status"];
-                return true;
-            }else{
-                throw new Exception("no user found");
-            }
-            
+            $this->fieldname = $user["fieldname"];
+            $this->user = $user["user"];
+            $this->timestamp = $user["timestamp"];
+        
+            return true;
         } else {
             printf("Database Error: %s\n", $stmt->error);
             return false;
         }
     }
 
-    // Create a Post
+    // Create a Custom Field
     public function create()
     {
         $query = "INSERT INTO {$this->table} 
         SET 
-        email = :email,
-        startdate= :startdate, 
-        enddate= :enddate, 
-        status= :status";
+        fieldname = :fieldname,
+        user= :user, 
+        timestamp= :timestamp";
 
         // Prepare Statement
         $stmt = $this->conn->prepare($query);
 
         // Sanitize data
-        $this->email = htmlspecialchars(strip_tags(trim($this->email)));
-        $this->startdate = htmlspecialchars(strip_tags(trim($this->startdate)));
-        $this->enddate = htmlspecialchars(strip_tags(trim($this->enddate)));
-        $this->status = htmlspecialchars(strip_tags(trim($this->status)));
+        $this->fieldname = htmlspecialchars(strip_tags(trim($this->fieldname)));
+        $this->user = htmlspecialchars(strip_tags(trim($this->user)));
+        $this->timestamp = htmlspecialchars(strip_tags(trim($this->timestamp)));
 
         // Bind Data
-        $stmt->bindParam(":email", $this->email);
-        $stmt->bindParam(":startdate", $this->startdate);
-        $stmt->bindParam(":enddate", $this->enddate);
-        $stmt->bindParam(":status", $this->status);
+        $stmt->bindParam(":fieldname", $this->fieldname);
+        $stmt->bindParam(":user", $this->user);
+        $stmt->bindParam(":timestamp", $this->timestamp);
 
         if ($stmt->execute()) {
             return true;
@@ -101,15 +92,14 @@ class User
     }
 
 
-    // Update a Post
+    // Update a Custom Field
     public function update()
     {
         $query = "UPDATE {$this->table} 
         SET 
-        email = :email,
-        startdate= :startdate, 
-        enddate= :enddate, 
-        status= :status
+        fieldname = :fieldname,
+        user = :user, 
+        timestamp= :timestamp
         WHERE id = :id";
 
         // Prepare Statement
@@ -117,17 +107,15 @@ class User
 
         // Sanitize data
         $this->id = htmlspecialchars(strip_tags(trim($this->id)));
-        $this->email = htmlspecialchars(strip_tags(trim($this->email)));
-        $this->startdate = htmlspecialchars(strip_tags(trim($this->startdate)));
-        $this->enddate = htmlspecialchars(strip_tags(trim($this->enddate)));
-        $this->status = htmlspecialchars(strip_tags(trim($this->status)));
+        $this->fieldname = htmlspecialchars(strip_tags(trim($this->fieldname)));
+        $this->user = htmlspecialchars(strip_tags(trim($this->user)));
+        $this->timestamp = htmlspecialchars(strip_tags(trim($this->timestamp)));
 
         // Bind Data
         $stmt->bindParam(":id", $this->id);
-        $stmt->bindParam(":email", $this->email);
-        $stmt->bindParam(":startdate", $this->startdate);
-        $stmt->bindParam(":enddate", $this->enddate);
-        $stmt->bindParam(":status", $this->status);
+        $stmt->bindParam(":fieldname", $this->fieldname);
+        $stmt->bindParam(":user", $this->user);
+        $stmt->bindParam(":timestamp", $this->timestamp);
 
         if ($stmt->execute()) {
             return true;
@@ -137,11 +125,11 @@ class User
         }
     }
 
-    // Delete a Post
+    // Delete a Custom Field
     public function delete()
     {
         $query = "DELETE FROM {$this->table} WHERE id=:id";
-
+        
         // Prepare Statement
         $stmt = $this->conn->prepare($query);
 

@@ -4,7 +4,7 @@ header("Access-Control-Allow-Origin: *");
 header("Content-type: application/json");
 
 include_once("../../config/Database.php");
-include_once("../../models/Category.php");
+include_once("../../models/CustomFields.php");
 
 
 // Instantiate DB and Connect to It
@@ -13,20 +13,21 @@ $db = $database->connect();
 
 
 // Instantiate blog post object
-$cat = new Category($db);
+$customfield = new CustomFields($db);
 
 // Get the Post ID
-$cat->id = isset($_GET["id"]) ? htmlspecialchars($_GET["id"]) : die();
+$customfield->id = isset($_GET["id"]) ? htmlspecialchars($_GET["id"]) : die();
 
-// Get Single Category
-$cat->single();
+// Get Single Post
+$customfield->single();
 
 
 // Create the Post Array
 $single = [
-    "id" => $cat->id,
-    "name" => $cat->name,
-    "created_at" => $cat->createdAt
+    "id" => $customfield->id,
+    "fieldname" => $customfield->fieldname,
+    "user" => $customfield->user,
+    "timestamp" => $customfield->timestamp,
 ];
 
 // Convert Single post to JSON

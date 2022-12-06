@@ -1,0 +1,35 @@
+<?php
+// Headers for GET Request
+header("Access-Control-Allow-Origin: *");
+header("Content-type: application/json");
+
+include_once("../../config/Database.php");
+include_once("../../models/Setting.php");
+
+
+// Instantiate DB and Connect to It
+$database = new Database();
+$db = $database->connect();
+
+
+// Instantiate blog post object
+$setting = new Setting($db);
+
+// Get the Post ID
+$setting->id = isset($_GET["id"]) ? htmlspecialchars($_GET["id"]) : die();
+
+// Get Single Setting
+$setting->single();
+
+
+// Create the Post Array
+$single = [
+    "id" => $setting->id,
+    "type" => $setting->type,
+    "value" => $setting->value,
+    "user" => $setting->user,
+    "timestamp" => $setting->timestamp,
+];
+
+// Convert Single post to JSON
+echo json_encode($single, JSON_PRETTY_PRINT);

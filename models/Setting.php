@@ -1,13 +1,16 @@
 <?php
-class Category
+class Setting
 {
     // DB Related
     private $conn;
-    private $table = "categories";
+    private $table = "settings";
 
     // Post Properties
     public $id;
-    public $name;
+    public $type;
+    public $value;
+    public $user;
+    public $timestamp;
 
     // Construct with Database
     public function __construct($db)
@@ -15,12 +18,12 @@ class Category
         $this->conn = $db;
     }
 
-    // Get All Categories
+    // Get All Settings
     public function read()
     {
-        $query = "SELECT *
+        $query = "SELECT
+        *
         FROM {$this->table} 
-        ORDER BY id DESC
         ";
 
         // Prepare Statement
@@ -46,9 +49,12 @@ class Category
 
         if ($stmt->execute()) {
             // Get the category
-            $post = $stmt->fetch(PDO::FETCH_ASSOC);
+            $setting = $stmt->fetch(PDO::FETCH_ASSOC);
+            $this->type = $setting["type"];
+            $this->value = $setting["value"];
+            $this->user = $setting["user"];
+            $this->timestamp = $setting["timestamp"];
 
-            $this->title = $post["id"];
             return true;
         } else {
             printf("Database Error: %s\n", $stmt->error);
@@ -61,16 +67,25 @@ class Category
     {
         $query = "INSERT INTO {$this->table} 
         SET 
-         name = :name";
+        type = :type,
+        value = :value,
+        user = :user,
+        timestamp = :timestamp";
 
         // Prepare Statement
         $stmt = $this->conn->prepare($query);
 
         // Sanitize data
-        $this->name = htmlspecialchars(strip_tags(trim($this->name)));
+        $this->type = htmlspecialchars(strip_tags(trim($this->type)));
+        $this->value = htmlspecialchars(strip_tags(trim($this->value)));
+        $this->user = htmlspecialchars(strip_tags(trim($this->user)));
+        $this->timestamp = htmlspecialchars(strip_tags(trim($this->timestamp)));
 
         // Bind Data
-        $stmt->bindParam(":name", $this->name);
+        $stmt->bindParam(":type", $this->type);
+        $stmt->bindParam(":value", $this->value);
+        $stmt->bindParam(":user", $this->user);
+        $stmt->bindParam(":timestamp", $this->timestamp);
 
         if ($stmt->execute()) {
             return true;
@@ -79,26 +94,34 @@ class Category
             return false;
         }
     }
-
 
     // Update a Category
     public function update()
     {
         $query = "UPDATE {$this->table} 
         SET 
-         name = :name 
-         WHERE id = :id";
+        type = :type,
+        value = :value,
+        user = :user,
+        timestamp = :timestamp
+        WHERE id = :id";
 
         // Prepare Statement
         $stmt = $this->conn->prepare($query);
 
         // Sanitize data
         $this->id = htmlspecialchars(strip_tags(trim($this->id)));
-        $this->name = htmlspecialchars(strip_tags(trim($this->name)));
+        $this->type = htmlspecialchars(strip_tags(trim($this->type)));
+        $this->value = htmlspecialchars(strip_tags(trim($this->value)));
+        $this->user = htmlspecialchars(strip_tags(trim($this->user)));
+        $this->timestamp = htmlspecialchars(strip_tags(trim($this->timestamp)));
 
         // Bind Data
         $stmt->bindParam(":id", $this->id);
-        $stmt->bindParam(":name", $this->name);
+        $stmt->bindParam(":type", $this->type);
+        $stmt->bindParam(":value", $this->value);
+        $stmt->bindParam(":user", $this->user);
+        $stmt->bindParam(":timestamp", $this->timestamp);
 
         if ($stmt->execute()) {
             return true;
@@ -108,7 +131,7 @@ class Category
         }
     }
 
-    // Delete a Category
+    // Delete a Setting
     public function delete()
     {
         $query = "DELETE FROM {$this->table} WHERE id=:id";

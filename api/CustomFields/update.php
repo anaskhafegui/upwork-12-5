@@ -6,7 +6,7 @@ header("Access-Control-Allow-Methods: PUT");
 header("Access-Control-Allow-Headers: Access-Control-Allow-Headers, Access-Control-Allow-Methods,Content-type,Access-Control-Allow-Origin, Authorization, X-Requested-With");
 
 include_once("../../config/Database.php");
-include_once("../../models/Category.php");
+include_once("../../models/CustomFields.php");
 
 
 // Instantiate DB and Connect to It
@@ -14,17 +14,19 @@ $database = new Database();
 $db = $database->connect();
 
 
-// Instantiate Category object
-$cat = new Category($db);
+// Instantiate customfield object
+$customfield = new CustomFields($db);
 
-// Get raw data
+// Get raw POSTed data
 $data = file_get_contents("php://input") != null ? json_decode(file_get_contents("php://input")) : die();
 
-$cat->id = $data->id;
-$cat->name = $data->name;
+$customfield->id = $data->id;
+$customfield->fieldname = $data->fieldname;
+$customfield->user = $data->user;
+$customfield->timestamp = $data->timestamp;
 
-if ($cat->update()) {
-    echo json_encode(["message" => "✅ Category Updated!"]);
+if ($customfield->update()) {
+    echo json_encode(["message" => "✅ Custom Field Updated!"]);
 } else {
-    echo json_encode(["message" => "❌ Cannot Update the Category!"]);
+    echo json_encode(["message" => "❌ Cannot Update!"]);
 }

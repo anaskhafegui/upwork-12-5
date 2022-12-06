@@ -5,7 +5,7 @@ header("Content-type: application/json");
 
 include_once("../../config/Database.php");
 include_once("../../models/User.php");
-
+include_once("../../Helpers.php");
 // Instantiate DB and Connect to It
 $database = new Database();
 $db = $database->connect();
@@ -20,16 +20,13 @@ $users = $user->read();
 $rows = $users->rowCount();
 
 /* IMPORTANT PART: THIS IS WHERE I'M PROCESSING THE DB DATA INTO JSON */
-
+$usersArr = [];
 // Check For Users in The Database
 if ($rows > 0) {
     // Posts Available
-    $usersArr = [];
-
     while ($row = $users->fetch(PDO::FETCH_ASSOC)) {
         extract($row);
-
-        $postItem = [
+        $userItem = [
             "id" => $id,
             "email" => $email,
             "startdate" => $startdate,
@@ -37,13 +34,13 @@ if ($rows > 0) {
             "status" => $status,
         ];
 
-        // Push post item to data
-        array_push($usersArr, $postItem);
+        // Push user item to data
+        array_push($usersArr, $userItem);
     }
 
     // Turn users array into JSON and display it
-    echo json_encode($usersArr, JSON_PRETTY_PRINT);
+    echo  Helpers::responsejson(200,"Get Users",$usersArr);
 } else {
     // No users in the DB
-    echo json_encode(["error" => "No User Found"]);
+    echo Helpers::responsejson(200,"No users Found",$usersArr);
 }
