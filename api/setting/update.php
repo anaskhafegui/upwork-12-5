@@ -7,6 +7,7 @@ header("Access-Control-Allow-Headers: Access-Control-Allow-Headers, Access-Contr
 
 include_once("../../config/Database.php");
 include_once("../../models/Setting.php");
+include_once("../../Helpers.php");
 
 
 // Instantiate DB and Connect to It
@@ -20,15 +21,16 @@ $setting = new Setting($db);
 // Get raw data
 $data = file_get_contents("php://input") != null ? json_decode(file_get_contents("php://input")) : die();
 
-var_dump($data);
 $setting->id = $data->id;
 $setting->type = $data->type;
 $setting->value = $data->value;
 $setting->user = $data->user;
 $setting->timestamp = $data->timestamp;
 
-if ($setting->update()) {
-    echo json_encode(["message" => "✅ Setting Updated!"]);
-} else {
-    echo json_encode(["message" => "❌ Cannot Update the Setting!"]);
+
+try {
+    $setting->update();
+    echo Helpers::responsejson(200,"✅ Setting Updated!",$setting);
+} catch(Exception $exception) {
+    echo Helpers::responsejson(200,"❌ Cannot Update Setting!",$exception->getMessage());
 }

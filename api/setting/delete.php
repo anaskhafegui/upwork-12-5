@@ -7,6 +7,7 @@ header("Access-Control-Allow-Headers: Access-Control-Allow-Headers, Access-Contr
 
 include_once("../../config/Database.php");
 include_once("../../models/Setting.php");
+include_once("../../Helpers.php");
 
 
 // Instantiate DB and Connect to It
@@ -19,11 +20,11 @@ $setting = new Setting($db);
 // Get raw POSTed data
 $data = file_get_contents("php://input") != null ? json_decode(file_get_contents("php://input")) : die();
 
-
 $setting->id = $data->id;
 
-if ($setting->delete()) {
-    echo json_encode(["message" => "✅ Setting Deleted!"]);
-} else {
-    echo json_encode(["message" => "❌ Cannot Delete The Setting!"]);
+try {
+    $setting->delete();
+    echo Helpers::responsejson(200,"✅ Setting Deleted!",[]);
+} catch (Exception $error) {
+    echo Helpers::responsejson(200,$error->getMessage(),[]);
 }

@@ -7,6 +7,7 @@ header("Access-Control-Allow-Headers: Access-Control-Allow-Headers, Access-Contr
 
 include_once("../../config/Database.php");
 include_once("../../models/CustomFields.php");
+include_once("../../Helpers.php");
 
 
 // Instantiate DB and Connect to It
@@ -15,16 +16,16 @@ $db = $database->connect();
 
 
 // Instantiate blog post object
-$user = new CustomFields($db);
+$customfield = new CustomFields($db);
 
-// Get raw usered data
+// Get raw customfield data
 $data = file_get_contents("php://input") != null ? json_decode(file_get_contents("php://input")) : die();
 
-$user->id = $data->id;
+$customfield->id = $data->id;
 
 try {
-    $user->delete();
-    echo json_encode(["message" => "✅ Custom Field Deleted!"]);
-} catch (Exception $e) {
-    echo json_encode(["message" => "Cannot Create User", "error" =>$e->errorInfo]);
+    $customfield->delete();
+    echo Helpers::responsejson(200,"✅ Custom Field Deleted!",[]);
+} catch (Exception $error) {
+    echo Helpers::responsejson(200,$error->getMessage(),[]);
 }

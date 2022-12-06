@@ -5,6 +5,7 @@ header("Content-type: application/json");
 
 include_once("../../config/Database.php");
 include_once("../../models/Setting.php");
+include_once("../../Helpers.php");
 
 
 // Instantiate DB and Connect to It
@@ -17,6 +18,8 @@ $setting = new Setting($db);
 
 // Get the Post ID
 $setting->id = isset($_GET["id"]) ? htmlspecialchars($_GET["id"]) : die();
+
+try{
 
 // Get Single Setting
 $setting->single();
@@ -31,5 +34,9 @@ $single = [
     "timestamp" => $setting->timestamp,
 ];
 
-// Convert Single post to JSON
-echo json_encode($single, JSON_PRETTY_PRINT);
+// Convert Single setting to JSON
+
+echo Helpers::responsejson(200,"Show setting",$single);
+}catch(Exception $error){
+    echo Helpers::responsejson(200,$error->getMessage(),[]);
+}

@@ -26,9 +26,10 @@ $user->startdate = $data->startdate;
 $user->enddate = $data->enddate;
 $user->status = $data->status;
 
-if ($user->create()) {
-    echo json_encode(["message" => "User Created Successfully"]);
-} else {
-    echo json_encode(["message" => "Cannot Create User"]);
+try {
+    $user->create();
+    echo Helpers::responsejson(200,"User Created Successfully",$user);
+} catch (Exception $exception) {
+    echo Helpers::responsejson(200,$error->getMessage(),[]);
 }
 

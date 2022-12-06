@@ -5,15 +5,16 @@ header("Content-type: application/json");
 
 include_once("../../config/Database.php");
 include_once("../../models/CustomFields.php");
+include_once("../../Helpers.php");
 
 // Instantiate DB and Connect to It
 $database = new Database();
 $db = $database->connect();
 
-// Instantiate blog post object
+// Instantiate blog Custom field object
 $customfield = new CustomFields($db);
 
-// Blog Post Query
+// Blog Custom field Query
 $customfields = $customfield->read();
 
 // Get Rows Count
@@ -23,7 +24,7 @@ $rows = $customfields->rowCount();
 
 // Check For customfields in The Database
 if ($rows > 0) {
-    // Posts Available
+    // Custom fields Available
     $customfieldsArr = [];
     while ($row = $customfields->fetch(PDO::FETCH_ASSOC)) {
         extract($row);
@@ -37,21 +38,8 @@ if ($rows > 0) {
         // Push customfield item to data
         array_push($customfieldsArr, $customfieldItem);
     }
-    $response = [
-        'status'=>200,
-        'message'=>"Get custom fields",
-        'data'=>$customfieldsArr,
-    ];
-
-    // Turn customfields array into JSON and display it
-    echo json_encode($response, JSON_PRETTY_PRINT);
-   
+    echo  Helpers::responsejson(200,"Get Custom Fields",$customfieldsArr);
 } else {
-    $response = [
-        'status'=>200,
-        'message'=>"No custom field Found",
-        'data'=>[],
-    ];
-    // No customfields in the DB
-    echo json_encode($response);
+    // No Get Custom Field in the DB
+    echo Helpers::responsejson(200,"No Custom Field Found",[]);
 }

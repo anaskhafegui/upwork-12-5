@@ -7,6 +7,7 @@ header("Access-Control-Allow-Headers: Access-Control-Allow-Headers, Access-Contr
 
 include_once("../../config/Database.php");
 include_once("../../models/CustomFields.php");
+include_once("../../Helpers.php");
 
 
 // Instantiate DB and Connect to It
@@ -26,7 +27,7 @@ $customfield->timestamp = $data->timestamp;
 
 try {
     $customfield->create();
-    echo json_encode(["message" => "Custom field Created Successfully"]);
-} catch (Exception $e) {
-    echo json_encode(["message" => "Cannot Create User", "error" =>$e->errorInfo]);
+    echo Helpers::responsejson(200,"Custom field Created Successfully",$customfield);
+} catch (Exception $exception) {
+    echo Helpers::responsejson(200,$error->getMessage(),[]);
 }

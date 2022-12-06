@@ -7,6 +7,7 @@ header("Access-Control-Allow-Headers: Access-Control-Allow-Headers, Access-Contr
 
 include_once("../../config/Database.php");
 include_once("../../models/CustomFields.php");
+include_once("../../Helpers.php");
 
 
 // Instantiate DB and Connect to It
@@ -25,8 +26,10 @@ $customfield->fieldname = $data->fieldname;
 $customfield->user = $data->user;
 $customfield->timestamp = $data->timestamp;
 
-if ($customfield->update()) {
-    echo json_encode(["message" => "✅ Custom Field Updated!"]);
-} else {
-    echo json_encode(["message" => "❌ Cannot Update!"]);
+
+try {
+    $customfield->update();
+    echo Helpers::responsejson(200,"✅ Custom Field Updated!",$customfield);
+} catch(Exception $exception) {
+    echo Helpers::responsejson(200,"❌ Cannot Update Custom Field!",$exception->getMessage());
 }

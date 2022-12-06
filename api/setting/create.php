@@ -7,6 +7,7 @@ header("Access-Control-Allow-Headers: Access-Control-Allow-Headers, Access-Contr
 
 include_once("../../config/Database.php");
 include_once("../../models/Setting.php");
+include_once("../../Helpers.php");
 
 
 // Instantiate DB and Connect to It
@@ -25,8 +26,11 @@ $setting->value = $data->value;
 $setting->user = $data->user;
 $setting->timestamp = $data->timestamp;
 
-if ($setting->create()) {
-    echo json_encode(["message" => "Setting Created Successfully"]);
-} else {
-    echo json_encode(["message" => "Cannot Create Category"]);
+
+try {
+    $setting->create();
+    echo Helpers::responsejson(200,"Setting Created Successfully",$setting);
+} catch (Exception $exception) {
+    echo Helpers::responsejson(200,$error->getMessage(),[]);
 }
+

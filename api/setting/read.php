@@ -5,6 +5,7 @@ header("Content-type: application/json");
 
 include_once("../../config/Database.php");
 include_once("../../models/Setting.php");
+include_once("../../Helpers.php");
 
 
 // Instantiate DB and Connect to It
@@ -12,7 +13,7 @@ $database = new Database();
 $db = $database->connect();
 
 
-// Instantiate category object
+// Instantiate setting object
 $setting = new Setting($db);
 
 // Setting Query
@@ -40,9 +41,8 @@ if ($rows > 0) {
         // Push post item to data
         array_push($settingsArr, $settingItem);
     }
-    // Turn categories array into JSON and display it
-    echo json_encode($settingsArr, JSON_PRETTY_PRINT);
+    echo  Helpers::responsejson(200,"Get Settings",$settingsArr);
 } else {
-    // No Setting in the DB
-    echo json_encode(["error" => "No Settings Found"]);
+    // No Get settings Fields in the DB
+    echo Helpers::responsejson(200,"No Settings Found",[]);
 }

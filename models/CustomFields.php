@@ -49,12 +49,15 @@ class CustomFields
 
         if ($stmt->execute()) {
             // Get the Custom Field
-            $user = $stmt->fetch(PDO::FETCH_ASSOC);
-            $this->fieldname = $user["fieldname"];
-            $this->user = $user["user"];
-            $this->timestamp = $user["timestamp"];
-        
+            $customfield = $stmt->fetch(PDO::FETCH_ASSOC);
+            if($customfield){
+                $this->fieldname = $customfield["fieldname"];
+                $this->user = $customfield["user"];
+                $this->timestamp = $customfield["timestamp"];
             return true;
+            }else{
+                throw new Exception("no custom field found");
+            }
         } else {
             printf("Database Error: %s\n", $stmt->error);
             return false;

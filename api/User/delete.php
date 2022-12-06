@@ -23,8 +23,9 @@ $data = file_get_contents("php://input") != null ? json_decode(file_get_contents
 
 $user->id = $data->id;
 
-if ($user->delete()) {
-    echo json_encode(["message" => "✅ User Deleted!"]);
-} else {
-    echo json_encode(["message" => "❌ Cannot Delete!"]);
+try {
+    $user->delete();
+    echo Helpers::responsejson(200,"✅ User Deleted!",[]);
+} catch (Exception $error) {
+    echo Helpers::responsejson(200,$error->getMessage(),[]);
 }

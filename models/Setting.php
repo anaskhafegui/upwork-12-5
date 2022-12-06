@@ -34,7 +34,7 @@ class Setting
         return $stmt;
     }
 
-    // Get a Single Category
+    // Get a Single Setting
     public function single()
     {
         $query = "SELECT *
@@ -48,21 +48,25 @@ class Setting
         $stmt->bindParam(1, $this->id);
 
         if ($stmt->execute()) {
-            // Get the category
+            
+            // Get the Setting
             $setting = $stmt->fetch(PDO::FETCH_ASSOC);
-            $this->type = $setting["type"];
-            $this->value = $setting["value"];
-            $this->user = $setting["user"];
-            $this->timestamp = $setting["timestamp"];
-
+            if($setting){
+                $this->type = $setting["type"];
+                $this->value = $setting["value"];
+                $this->user = $setting["user"];
+                $this->timestamp = $setting["timestamp"];
             return true;
+            }else{
+                throw new Exception("no setting found");
+            }
         } else {
             printf("Database Error: %s\n", $stmt->error);
             return false;
         }
     }
 
-    // Create a Category
+    // Create a Setting
     public function create()
     {
         $query = "INSERT INTO {$this->table} 
@@ -95,7 +99,7 @@ class Setting
         }
     }
 
-    // Update a Category
+    // Update a Setting
     public function update()
     {
         $query = "UPDATE {$this->table} 

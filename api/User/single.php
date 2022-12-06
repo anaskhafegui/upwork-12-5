@@ -30,9 +30,8 @@ try{
         "endDate" => $user->enddate,
         "status" => $user->status,
     ];
-
-    // Convert Single post to JSON
-    echo Helpers::responsejson(200,"Show user Found",$single);
+    // Convert Single user to JSON
+    echo Helpers::responsejson(200,"Show user",$single);
 }catch(Exception $error){
-    echo Helpers::responsejson(200,"user not Found",[]);
+    echo Helpers::responsejson(200,$error->getMessage(),[]);
 }

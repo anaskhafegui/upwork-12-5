@@ -34,7 +34,7 @@ class User
         return $stmt;
     }
 
-    // Get a Single Post
+    // Get a Single User
     public function single()
     {
         $query = "SELECT
@@ -49,7 +49,7 @@ class User
         $stmt->bindParam(1, $this->id);
 
         if ($stmt->execute()) {
-            // Get the post
+            // Get the User
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
            if($user){
                 $this->email = $user["email"];
@@ -67,7 +67,7 @@ class User
         }
     }
 
-    // Create a Post
+    // Create a User
     public function create()
     {
         $query = "INSERT INTO {$this->table} 
@@ -101,7 +101,7 @@ class User
     }
 
 
-    // Update a Post
+    // Update a User
     public function update()
     {
         $query = "UPDATE {$this->table} 
@@ -137,7 +137,7 @@ class User
         }
     }
 
-    // Delete a Post
+    // Delete a User
     public function delete()
     {
         $query = "DELETE FROM {$this->table} WHERE id=:id";

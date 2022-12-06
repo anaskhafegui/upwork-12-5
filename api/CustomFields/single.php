@@ -5,6 +5,7 @@ header("Content-type: application/json");
 
 include_once("../../config/Database.php");
 include_once("../../models/CustomFields.php");
+include_once("../../Helpers.php");
 
 
 // Instantiate DB and Connect to It
@@ -18,11 +19,12 @@ $customfield = new CustomFields($db);
 // Get the Post ID
 $customfield->id = isset($_GET["id"]) ? htmlspecialchars($_GET["id"]) : die();
 
-// Get Single Post
+try {
+// Get Single customfield
 $customfield->single();
 
 
-// Create the Post Array
+// Create the customfields Array
 $single = [
     "id" => $customfield->id,
     "fieldname" => $customfield->fieldname,
@@ -30,5 +32,8 @@ $single = [
     "timestamp" => $customfield->timestamp,
 ];
 
-// Convert Single post to JSON
-echo json_encode($single, JSON_PRETTY_PRINT);
+// Convert Single custom field to JSON
+echo Helpers::responsejson(200,"Show customfield",$single);
+}catch(Exception $exception){
+    echo Helpers::responsejson(200,$exception->getMessage(),[]);
+}

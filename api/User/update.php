@@ -27,8 +27,9 @@ $user->startdate = $data->startdate;
 $user->enddate = $data->enddate;
 $user->status = $data->status;
 
-if ($user->update()) {
-    echo json_encode(["message" => "✅ User Updated!"]);
-} else {
-    echo json_encode(["message" => "❌ Cannot Update!"]);
+try {
+    $user->update();
+    echo Helpers::responsejson(200,"✅ User Updated!",$user);
+} catch(Exception $exception) {
+    echo Helpers::responsejson(200,"❌ Cannot Update User!",$exception->getMessage());
 }

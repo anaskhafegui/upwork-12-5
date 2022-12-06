@@ -42,5 +42,5 @@ if ($rows > 0) {
     echo  Helpers::responsejson(200,"Get Users",$usersArr);
 } else {
     // No users in the DB
-    echo Helpers::responsejson(200,"No users Found",$usersArr);
+    echo Helpers::responsejson(200,"No users Found",[]);
 }
