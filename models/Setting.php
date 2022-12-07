@@ -19,13 +19,19 @@ class Setting
     }
 
     // Get All Settings
-    public function read()
+    public function read($email= null,$type = null)
     {
         $query = "SELECT
         *
-        FROM {$this->table} 
+        FROM {$this->table} p
         ";
 
+        if($email)  $query = $query."WHERE p.user LIKE '%$email%'";
+        if($type){  
+            $query = $query." AND  p.type LIKE '%$type%'";
+        }
+
+        var_dump($query);
         // Prepare Statement
         $stmt = $this->conn->prepare($query);
 

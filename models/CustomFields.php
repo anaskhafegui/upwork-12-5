@@ -18,13 +18,14 @@ class CustomFields
     }
 
     // Get All customfields
-    public function read()
+    public function read($email = null)
     {
         $query = "SELECT
         *
-        FROM {$this->table} 
+        FROM {$this->table} p
         ";
 
+        if($email)  $query = $query."WHERE p.user LIKE '%$email%'";
         // Prepare Statement
         $stmt = $this->conn->prepare($query);
 

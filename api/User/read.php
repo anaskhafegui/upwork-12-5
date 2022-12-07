@@ -13,8 +13,8 @@ $db = $database->connect();
 // Instantiate blog post object
 $user = new User($db);
 
-// Blog Post Query
-$users = $user->read();
+// User Query
+$users = $user->read(isset($_GET['email']) ? $_GET['email'] : NULL);
 
 // Get Rows Count
 $rows = $users->rowCount();
@@ -23,7 +23,7 @@ $rows = $users->rowCount();
 $usersArr = [];
 // Check For Users in The Database
 if ($rows > 0) {
-    // Posts Available
+    // Users Available
     while ($row = $users->fetch(PDO::FETCH_ASSOC)) {
         extract($row);
         $userItem = [
@@ -34,13 +34,12 @@ if ($rows > 0) {
             "status" => $status,
         ];
 
-        // Push user item to data
+        // Push User item to data
         array_push($usersArr, $userItem);
     }
-
     // Turn users array into JSON and display it
-    echo  Helpers::responsejson(200,"Get Users",$usersArr);
+    echo  Helpers::responseJson(200,"Get Users",$usersArr);
 } else {
     // No users in the DB
-    echo Helpers::responsejson(200,"No users Found",[]);
+    echo Helpers::responseJson(200,"No users Found",[]);
 }

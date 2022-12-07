@@ -17,7 +17,7 @@ $db = $database->connect();
 $setting = new Setting($db);
 
 // Setting Query
-$settings = $setting->read();
+$settings = $setting->read(isset($_GET['email']) ? $_GET['email'] : NULL,isset($_GET['type']) ? $_GET['type'] : NULL);
 
 // Get Rows Count
 $rows = $settings->rowCount();

@@ -14,8 +14,8 @@ $db = $database->connect();
 // Instantiate blog Custom field object
 $customfield = new CustomFields($db);
 
-// Blog Custom field Query
-$customfields = $customfield->read();
+// Custom field Query
+$customfields = $customfield->read(isset($_GET['email']) ? $_GET['email'] : NULL);
 
 // Get Rows Count
 $rows = $customfields->rowCount();
