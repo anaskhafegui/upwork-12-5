@@ -20,7 +20,9 @@ $setting = new Setting($db);
 // Get raw POSTed data
 $data = file_get_contents("php://input") != null ? json_decode(file_get_contents("php://input")) : die();
 
-$setting->id = $data->id;
+$setting->user = $data->user;
+$setting->type = $data->type;
+$setting->value = $data->value;
 
 try {
     $setting->delete();
